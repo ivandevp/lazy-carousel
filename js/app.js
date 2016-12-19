@@ -37,6 +37,7 @@ $(".lazy").lazyload();
 	var container = document.querySelector(".catalog");
 	var next = container.querySelector(".next");
 	var prev = container.querySelector(".prev");
+	var slideTo = container.querySelector(".slide-to");
 	var items = container.querySelectorAll(".content li");
 	var counter = 0;
 	var totalItems = items.length;
@@ -44,21 +45,28 @@ $(".lazy").lazyload();
 
 	var goTo = function (number) {
 		current.classList.remove("current");
-		counter += number;
-		if (number === -1 && counter < 0) {
+		if (counter <= 0) {
 			counter = totalItems - 1;
-		} 
-		if (number === 1 && !items[counter]) {
+		}
+		if (number >= totalItems) {
 			counter = 0;
 		}
 		current = items[counter];
 		current.classList.add("current");
+		slideTo.selectedIndex = counter;
 	};
 
 	next.addEventListener("click", function () {
-		goTo(1);
+		counter += 1;
+		goTo(counter);
 	});
 	prev.addEventListener("click", function () {
-		goTo(-1);
+		counter -= 1;
+		goTo(counter);
+	});
+	slideTo.addEventListener("change", function () {
+		var slide = parseInt(this.selectedOptions[0].getAttribute("data-slide-to"));
+		counter = slide;
+		goTo(counter);
 	});
 })();
